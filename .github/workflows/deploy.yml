@@ -84,7 +84,7 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/devops-pipeline
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/devops-pipeline
           chmod 600 ~/.ssh/devops-pipeline
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
