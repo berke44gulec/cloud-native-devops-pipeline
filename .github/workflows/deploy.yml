@@ -81,11 +81,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Debug SSH Key
+        run: |
+          echo "SSH Key length: ${#SSH_KEY}"
+          echo "$SSH_KEY" | base64 -d | wc -l
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/devops-pipeline
           chmod 600 ~/.ssh/devops-pipeline
+          ls -la ~/.ssh/devops-pipeline
+          head -1 ~/.ssh/devops-pipeline
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
