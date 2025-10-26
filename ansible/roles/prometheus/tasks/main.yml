@@ -1,0 +1,56 @@
+---
+- name: Create prometheus directory
+  file:
+    path: /opt/monitoring/prometheus
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+  become: yes
+
+- name: Download Prometheus
+  get_url:
+    url: https://github.com/prometheus/prometheus/releases/download/v2.45.0/prometheus-2.45.0.linux-amd64.tar.gz
+    dest: /tmp/prometheus.tar.gz
+
+- name: Extract Prometheus
+  unarchive:
+    src: /tmp/prometheus.tar.gz
+    dest: /opt/monitoring/prometheus
+    remote_src: yes
+    creates: /opt/monitoring/prometheus/prometheus-2.45.0.linux-amd64
+  become: yes
+
+- name: Create Prometheus config
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/monitoring/prometheus/prometheus-2.45.0.linux-amd64/prometheus.yml
+  become: yes
+
+- name: Create Prometheus systemd service
+  copy:
+    content: |
+      [Unit]
+      Description=Prometheus
+      After=network.target
+
+      [Service]
+      User=ubuntu
+      Group=ubuntu
+      Type=simple
+      ExecStart=/opt/monitoring/prometheus/prometheus-2.45.0.linux-amd64/prometheus \
+        --config.file=/opt/monitoring/prometheus/prometheus-2.45.0.linux-amd64/prometheus.yml \
+        --storage.tsdb.path=/opt/monitoring/prometheus/data
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/prometheus.service
+  become: yes
+
+- name: Start Prometheus
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  become: yes

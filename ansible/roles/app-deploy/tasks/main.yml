@@ -1,0 +1,32 @@
+---
+- name: Pull Docker image
+  docker_image:
+    name: "{{ docker_image }}"
+    source: pull
+  become: yes
+
+- name: Stop existing container
+  docker_container:
+    name: app
+    state: absent
+  become: yes
+  ignore_errors: yes
+
+- name: Run application container
+  docker_container:
+    name: app
+    image: "{{ docker_image }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ app_port }}:{{ app_port }}"
+    env:
+      NODE_ENV: production
+      APP_VERSION: "1.0.0"
+  become: yes
+
+- name: Wait for application to start
+  wait_for:
+    port: "{{ app_port }}"
+    delay: 5
+    timeout: 30

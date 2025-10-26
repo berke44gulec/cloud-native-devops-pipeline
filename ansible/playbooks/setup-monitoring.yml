@@ -1,0 +1,21 @@
+---
+- name: Setup Monitoring Stack
+  hosts: webservers
+  become: yes
+
+  roles:
+    - ../../roles/prometheus
+
+  tasks:
+    - name: Check Prometheus status
+      uri:
+        url: http://localhost:9090/-/healthy
+        method: GET
+        status_code: 200
+      register: prometheus_health
+
+    - name: Display monitoring URLs
+      debug:
+        msg:
+          - "Prometheus: http://{{ ansible_host }}:9090"
+          - "Grafana: http://{{ ansible_host }}:3001"

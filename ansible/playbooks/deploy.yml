@@ -1,0 +1,23 @@
+---
+- name: Deploy Application
+  hosts: webservers
+  become: yes
+
+  roles:
+    # - ../../roles/docker
+    - ../../roles/app-deploy
+
+  tasks:
+    - name: Check application health
+      uri:
+        url: "http://localhost:{{ app_port }}/health"
+        method: GET
+        status_code: 200
+      register: health_check
+      until: health_check.status == 200
+      retries: 5
+      delay: 3
+
+    - name: Display deployment status
+      debug:
+        msg: "Application deployed successfully at http://{{ ansible_host }}:{{ app_port }}"
