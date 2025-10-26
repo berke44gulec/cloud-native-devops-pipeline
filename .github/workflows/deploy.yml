@@ -86,12 +86,12 @@ jobs:
           echo "SSH Key length: ${#SSH_KEY}"
           echo "$SSH_KEY" | base64 -d | wc -l
         env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/devops-pipeline
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/devops-pipeline
           chmod 600 ~/.ssh/devops-pipeline
           ls -la ~/.ssh/devops-pipeline
           head -1 ~/.ssh/devops-pipeline
