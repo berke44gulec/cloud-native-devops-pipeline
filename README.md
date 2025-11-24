@@ -382,18 +382,5 @@ ansible-playbook -i ansible/inventory/hosts ansible/playbooks/deploy.yml -v
 - Security best practices
 - Separation of concerns in CI/CD
 
-## Author
-
-Berke Güleç
-
-GitHub: https://github.com/berke44gulec
-
-Email: berke44gulec@outlook.com
-
-## License
-
+## Note:
 This project is for educational purposes.
-
----
-
-Last updated: October 2025
