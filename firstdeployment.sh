@@ -1,5 +1,4 @@
 #!/bin/bash
-# Fedora'da proje kurulumu - Çalıştır satır satır
 
 cd ~/projects/cloud-native-devops-pipeline
 
