@@ -384,3 +384,6 @@ ansible-playbook -i ansible/inventory/hosts ansible/playbooks/deploy.yml -v
 
 ## Note:
 This project is for educational purposes.
+
+## License
+This project is licensed under the MIT License.
